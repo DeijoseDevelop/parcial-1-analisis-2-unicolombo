@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://github.com/DeijoseDevelop/parcial-1-analisis-2-unicolombo.git",
+  "homepage": "https://DeijoseDevelop.github.io/parcial-1-analisis-2-unicolombo/",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
