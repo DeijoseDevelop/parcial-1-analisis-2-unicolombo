@@ -6,7 +6,7 @@
   "homepage": "https://DeijoseDevelop.github.io/parcial-1-analisis-2-unicolombo/",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
