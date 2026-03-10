@@ -34,23 +34,11 @@ export function setupRouter(): Router {
             path: "*",
             component: () => HomeView(),
         },
-    ]);
+    ], {
+        base: import.meta.env.BASE_URL
+    });
 
     router.beforeEach(authGuard);
-
-    // Ejecutar el guard manualmente en la carga inicial
-    // (el router no ejecuta guards en el primer render)
-    const initial = window.location.pathname || "/";
-    const result = authGuard(initial, initial);
-    if (typeof result === "string" && result !== initial) {
-        router.navigate(result);
-    } else if (result === undefined && initial === "/admin") {
-        // Verificar también el adminGuard en carga directa
-        const adminResult = adminGuard(initial, initial);
-        if (typeof adminResult === "string") {
-            router.navigate(adminResult);
-        }
-    }
 
     return router;
 }

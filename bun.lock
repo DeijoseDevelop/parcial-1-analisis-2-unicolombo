@@ -5,7 +5,7 @@
     "": {
       "name": "parcial-1",
       "dependencies": {
-        "@deijose/nix-js": "^1.2.0",
+        "@deijose/nix-js": "^1.3.0",
         "axios": "^1.13.6",
       },
       "devDependencies": {
@@ -21,7 +21,7 @@
     "vite": "^8.0.0-beta.13",
   },
   "packages": {
-    "@deijose/nix-js": ["@deijose/nix-js@1.2.0", "", {}, "sha512-R5juK1toNKdk/pybLQhMSHpEybc4TuKRmq9ZvgVZJwaPSQBkwe5U4rLp3CSmuGWL3GvLi073XZBUV7CYUaAcMA=="],
+    "@deijose/nix-js": ["@deijose/nix-js@1.3.0", "", {}, "sha512-DorkM1dbVUIyY5sqHLQZ4Ds3NWGbuHDu/fjoN2ACMuhw4nKdosif4K1mDPYBVRFsG+KW2hClAOEWurxWqq2+Ew=="],
 
     "@emnapi/core": ["@emnapi/core@1.8.1", "", { "dependencies": { "@emnapi/wasi-threads": "1.1.0", "tslib": "^2.4.0" } }, "sha512-AvT9QFpxK0Zd8J0jopedNm+w/2fIzvtPKPjqyw9jwvBaReTTqPBk9Hixaz7KbjimP+QNz605/XnjFcDAL2pqBg=="],
 
