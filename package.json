@@ -3,17 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://DeijoseDevelop.github.io/parcial-1-analisis-2-unicolombo/",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && cp dist/index.html dist/404.html",
-    "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.1",
-    "gh-pages": "^6.3.0",
     "tailwindcss": "^4.2.1",
     "typescript": "~5.9.3",
     "vite": "^8.0.0-beta.16"

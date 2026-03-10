@@ -34,9 +34,7 @@ export function setupRouter(): Router {
             path: "*",
             component: () => HomeView(),
         },
-    ], {
-        base: import.meta.env.BASE_URL
-    });
+    ]);
 
     router.beforeEach(authGuard);
 
