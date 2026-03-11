@@ -63,11 +63,11 @@ export function LoginView(): NixTemplate {
                                 @blur=${form.fields.email.onBlur}
                             />
                             ${() => {
-            const err = form.fields.email.error.value;
-            return err
-                ? html`<p class="mt-1 text-sm text-red-500">${err}</p>`
-                : html`<span></span>`;
-        }}
+                                const err = form.fields.email.error.value;
+                                return err
+                                    ? html`<p class="mt-1 text-sm text-red-500">${err}</p>`
+                                    : html`<span></span>`;
+                            }}
                         </div>
 
                         <div>
@@ -81,18 +81,18 @@ export function LoginView(): NixTemplate {
                                 @blur=${form.fields.password.onBlur}
                             />
                             ${() => {
-            const err = form.fields.password.error.value;
-            return err
-                ? html`<p class="mt-1 text-sm text-red-500">${err}</p>`
-                : html`<span></span>`;
-        }}
+                                const err = form.fields.password.error.value;
+                                return err
+                                    ? html`<p class="mt-1 text-sm text-red-500">${err}</p>`
+                                    : html`<span></span>`;
+                            }}
                         </div>
 
                         ${() =>
-            errorMsg.value
-                ? html`<div class="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">${errorMsg.value}</div>`
-                : html`<span></span>`
-        }
+                            errorMsg.value
+                                ? html`<div class="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">${errorMsg.value}</div>`
+                                : html`<span></span>`
+                        }
 
                         <button
                             type="submit"
