@@ -12,6 +12,7 @@ export function BookFormComponent(onCreated: () => void): NixTemplate {
         publisher: "",
         stock: "",
         synopsis: "",
+        cover: "",
     }, {
         validators: {
             title: [required("El título es obligatorio")],
@@ -29,6 +30,16 @@ export function BookFormComponent(onCreated: () => void): NixTemplate {
         },
     });
 
+    // helper to convert file to base64
+    function fileToBase64(file: File): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onerror = () => reject(new Error("error reading file"));
+            reader.onload = () => resolve(String(reader.result ?? ""));
+            reader.readAsDataURL(file);
+        });
+    }
+
     const onSubmit = form.handleSubmit(async (values) => {
         loading.value = true;
         try {
@@ -38,6 +49,7 @@ export function BookFormComponent(onCreated: () => void): NixTemplate {
                 publisher: values.publisher,
                 stock: Number(values.stock) || 0,
                 synopsis: values.synopsis || undefined,
+                cover: values.cover || undefined,
             });
             showToast("Libro creado exitosamente", "success");
             form.reset();
@@ -64,9 +76,9 @@ export function BookFormComponent(onCreated: () => void): NixTemplate {
                             @blur=${form.fields.title.onBlur}
                         />
                         ${() => {
-                            const err = form.fields.title.error.value;
-                            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
-                        }}
+            const err = form.fields.title.error.value;
+            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
+        }}
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Autor</label>
@@ -76,9 +88,9 @@ export function BookFormComponent(onCreated: () => void): NixTemplate {
                             @blur=${form.fields.author.onBlur}
                         />
                         ${() => {
-                            const err = form.fields.author.error.value;
-                            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
-                        }}
+            const err = form.fields.author.error.value;
+            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
+        }}
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Editorial</label>
@@ -88,9 +100,9 @@ export function BookFormComponent(onCreated: () => void): NixTemplate {
                             @blur=${form.fields.publisher.onBlur}
                         />
                         ${() => {
-                            const err = form.fields.publisher.error.value;
-                            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
-                        }}
+            const err = form.fields.publisher.error.value;
+            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
+        }}
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
@@ -100,9 +112,9 @@ export function BookFormComponent(onCreated: () => void): NixTemplate {
                             @blur=${form.fields.stock.onBlur}
                         />
                         ${() => {
-                            const err = form.fields.stock.error.value;
-                            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
-                        }}
+            const err = form.fields.stock.error.value;
+            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
+        }}
                     </div>
                 </div>
                 <div>
@@ -110,6 +122,24 @@ export function BookFormComponent(onCreated: () => void): NixTemplate {
                     <textarea class=${`${INPUT_CLASS} h-20 resize-none`} placeholder="Breve descripción del libro..."
                         @input=${form.fields.synopsis.onInput}
                     ></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Portada (opcional)</label>
+                    <input type="file" accept="image/*" class="block" @change=${async (e: Event) => {
+            const f = (e.target as HTMLInputElement).files?.[0];
+            if (!f) return;
+            try {
+                const b = await fileToBase64(f);
+                // set raw value on the form field
+                (form.fields as any).cover.value.value = b;
+            } catch (_err) {
+                showToast("No se pudo leer la imagen", "error");
+            }
+        }} />
+                    ${() => {
+            const b = (form.fields as any).cover.value.value;
+            return b ? html`<img src=${b} class="mt-2 w-28 h-36 object-cover rounded" />` : html`<span></span>`;
+        }}
                 </div>
                 <button
                     type="submit"

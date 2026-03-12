@@ -96,7 +96,7 @@ export function LoginView(): NixTemplate {
 
                         <button
                             type="submit"
-                            class="w-full py-2.5 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="cursor-pointer w-full py-2.5 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled=${() => loading.value}
                         >
                             ${() => (loading.value ? "Ingresando..." : "Iniciar Sesión")}

@@ -18,6 +18,7 @@ export function ManageBooksView(): NixTemplate {
     const editPublisher = signal("");
     const editStock = signal("");
     const editSynopsis = signal("");
+    const editCover = signal("");
     const editLoading = signal(false);
 
     // Reservations expansion per book row
@@ -32,6 +33,7 @@ export function ManageBooksView(): NixTemplate {
         editPublisher.value = book.publisher;
         editStock.value = String(book.stock);
         editSynopsis.value = book.synopsis ?? "";
+        editCover.value = book.cover ?? "";
     }
 
     function closeEdit() {
@@ -62,6 +64,7 @@ export function ManageBooksView(): NixTemplate {
                 publisher: editPublisher.value.trim(),
                 stock: stockNum,
                 synopsis: editSynopsis.value.trim() || undefined,
+                cover: editCover.value || undefined,
             });
             showToast(`"${editTitle.value.trim()}" actualizado`, "success");
             closeEdit();
@@ -159,6 +162,18 @@ export function ManageBooksView(): NixTemplate {
                                 @input=${(e: Event) => { editSynopsis.value = (e.target as HTMLTextAreaElement).value; }}
                             ></textarea>
                         </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Portada (opcional)</label>
+                            <input type="file" accept="image/*" class="block" @change=${async (e: Event) => {
+                const f = (e.target as HTMLInputElement).files?.[0];
+                if (!f) return;
+                const reader = new FileReader();
+                reader.onload = () => { editCover.value = String(reader.result ?? ""); };
+                reader.onerror = () => { showToast("No se pudo leer la imagen", "error"); };
+                reader.readAsDataURL(f);
+            }} />
+                            ${() => editCover.value ? html`<img src=${() => editCover.value} class="mt-2 w-28 h-36 object-cover rounded" />` : html`<span></span>`}
+                        </div>
                     </div>
                     <div class="flex gap-3 justify-end mt-6">
                         <button
@@ -206,9 +221,9 @@ export function ManageBooksView(): NixTemplate {
                 <h2 class="text-lg font-bold text-gray-900">Gestión de Libros</h2>
             </div>
             ${createQuery(
-                "books",
-                () => bookRepository.getAll(),
-                (books) => html`
+        "books",
+        () => bookRepository.getAll(),
+        (books) => html`
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead>
@@ -273,8 +288,8 @@ export function ManageBooksView(): NixTemplate {
                         </table>
                     </div>
                 `,
-                { fallback: Spinner({ size: "w-6 h-6", padding: "py-8" }) },
-            )}
+        { fallback: Spinner({ size: "w-6 h-6", padding: "py-8" }) },
+    )}
         </div>
     `;
 }
