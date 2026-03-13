@@ -138,11 +138,17 @@ export function LoginView(): NixTemplate {
                         <p class="text-[10px] uppercase tracking-widest font-black text-gray-400 mb-4 text-center">Credenciales de Acceso</p>
                         <div class="grid grid-cols-1 gap-2">
                             <div class="flex items-center justify-between p-3 bg-white/40 rounded-xl border border-white/20 hover:bg-white/60 transition-colors">
-                                <span class="text-xs font-bold text-gray-600">Estudiante</span>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-gray-600">Estudiante</span>
+                                    <span class="text-[10px] text-gray-400 font-medium">Contraseña: 123456</span>
+                                </div>
                                 <span class="text-[10px] font-mono text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">carlos@unicolombo.edu.co</span>
                             </div>
                             <div class="flex items-center justify-between p-3 bg-white/40 rounded-xl border border-white/20 hover:bg-white/60 transition-colors">
-                                <span class="text-xs font-bold text-gray-600">Admin</span>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-gray-600">Admin</span>
+                                    <span class="text-[10px] text-gray-400 font-medium">Contraseña: admin123</span>
+                                </div>
                                 <span class="text-[10px] font-mono text-red-600 bg-red-50 px-2 py-0.5 rounded-full">admin@unicolombo.edu.co</span>
                             </div>
                         </div>
