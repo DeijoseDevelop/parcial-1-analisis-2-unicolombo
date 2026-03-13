@@ -1,12 +1,25 @@
 import type { AuthRepository } from "./repository.interface";
 import type { AuthUser, LoginCredentials } from "../../shared/types/models";
-import { httpClient } from "../../core/http/http.client";
+import { MOCK_USERS } from "../mock/users.mock";
+
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const authRepository: AuthRepository = {
     async login(credentials: LoginCredentials): Promise<AuthUser> {
-        const res = await httpClient.post("/login", credentials);
-        const token: string = res.data.token;
-        const user = res.data.user as Omit<AuthUser, "token">;
-        return { ...user, token };
+        await delay(600);
+        const user = MOCK_USERS.find(
+            u => u.email === credentials.email && u.password === credentials.password
+        );
+
+        if (!user) {
+            throw new Error("Credenciales inválidas");
+        }
+
+        // Return user without password but with a fake token
+        const { password, ...userData } = user;
+        return {
+            ...userData,
+            token: `mock-token-${userData.id}-${Date.now()}`
+        };
     },
 };

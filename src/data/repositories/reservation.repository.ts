@@ -1,48 +1,66 @@
 import type { ReservationRepository } from "./repository.interface";
 import type { Reservation } from "../../shared/types/models";
-import { httpClient } from "../../core/http/http.client";
+import { MOCK_RESERVATIONS, getNextReservationId } from "../mock/reservations.mock";
+import { MOCK_BOOKS } from "../mock/books.mock";
 
-function mapApiReservation(r: any): Reservation {
-    return {
-        id: r.id,
-        userId: r.userId,
-        bookId: r.bookId,
-        bookTitle: r.book?.title || r.bookTitle || "",
-        bookAuthor: r.book?.author || r.bookAuthor || "",
-        requestDate: new Date(r.requestAt || r.requestDate).toISOString(),
-        returnDate: r.returnAt ? new Date(r.returnAt).toISOString() : null,
-        status: r.status,
-        userName: r.user?.name || "",
-    };
-}
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+let reservations = [...MOCK_RESERVATIONS];
 
 export const reservationRepository: ReservationRepository = {
     async getAll(): Promise<Reservation[]> {
-        const res = await httpClient.get<any[]>("/reservations");
-        return res.data.map(mapApiReservation);
+        await delay(300);
+        return reservations;
     },
 
     async getByUser(userId: number): Promise<Reservation[]> {
-        const res = await httpClient.get<any[]>(`/reservations/user/${userId}`);
-        return res.data.map(mapApiReservation);
+        await delay(300);
+        return reservations.filter(r => r.userId === userId);
     },
 
     async create(userId: number, bookId: number): Promise<Reservation> {
-        await httpClient.post("/reservations", { userId, bookId });
-        const list = await this.getByUser(userId);
-        // return the most recent reservation
-        return list.sort((a, b) => (a.requestDate < b.requestDate ? 1 : -1))[0];
+        await delay(500);
+        const book = MOCK_BOOKS.find(b => b.id === bookId);
+        if (!book) throw new Error("Libro no encontrado");
+
+        const newReservation: Reservation = {
+            id: getNextReservationId(),
+            userId,
+            bookId,
+            bookTitle: book.title,
+            bookAuthor: book.author,
+            requestDate: new Date().toISOString(),
+            status: "RESERVED",
+        };
+        reservations.push(newReservation);
+        return newReservation;
     },
 
     async cancel(reservationId: number): Promise<void> {
-        await httpClient.post(`/reservations/${reservationId}/cancel`);
+        await delay(300);
+        const index = reservations.findIndex(r => r.id === reservationId);
+        if (index !== -1) {
+            reservations[index] = { ...reservations[index], status: "CANCELLED" };
+        }
     },
 
     async confirmLoan(reservationId: number): Promise<void> {
-        await httpClient.post(`/reservations/${reservationId}/confirm`);
+        await delay(300);
+        const index = reservations.findIndex(r => r.id === reservationId);
+        if (index !== -1) {
+            reservations[index] = { ...reservations[index], status: "BORROWED" };
+        }
     },
 
     async returnBook(reservationId: number): Promise<void> {
-        await httpClient.post(`/reservations/${reservationId}/return`);
+        await delay(300);
+        const index = reservations.findIndex(r => r.id === reservationId);
+        if (index !== -1) {
+            reservations[index] = { 
+                ...reservations[index], 
+                status: "RETURNED",
+                returnDate: new Date().toISOString()
+            };
+        }
     },
 };
