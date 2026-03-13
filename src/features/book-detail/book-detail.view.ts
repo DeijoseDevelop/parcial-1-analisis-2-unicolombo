@@ -82,7 +82,7 @@ export class BookDetailView extends NixComponent {
         }
     };
 
-    onMount() {
+    onInit() {
         if (isLoggedIn.value) {
             this.checkActiveStatus(this.bookId);
         }
