@@ -30,6 +30,7 @@ export const reservationRepository: ReservationRepository = {
             bookTitle: book.title,
             bookAuthor: book.author,
             requestDate: new Date().toISOString(),
+            returnDate: null,
             status: "RESERVED",
         };
         reservations.push(newReservation);
