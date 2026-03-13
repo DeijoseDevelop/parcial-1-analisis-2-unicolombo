@@ -19,7 +19,7 @@ export function setupRouter(): Router {
         },
         {
             path: "/book/:id",
-            component: () => BookDetailView(),
+            component: () => new BookDetailView(),
         },
         {
             path: "/my-loans",

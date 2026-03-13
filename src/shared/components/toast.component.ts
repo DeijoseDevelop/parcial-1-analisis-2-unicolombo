@@ -29,7 +29,7 @@ const TYPE_CLASSES: Record<ToastType, string> = {
 export class ToastContainer extends NixComponent {
     render(): NixTemplate {
         return html`
-            <div class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm">
+            <div class="fixed top-4 right-4 z-[10000] flex flex-col gap-2 max-w-sm">
                 ${() =>
                 toasts.value.map(
                     (t) => html`

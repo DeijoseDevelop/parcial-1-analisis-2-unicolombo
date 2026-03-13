@@ -7,11 +7,12 @@ function mapApiReservation(r: any): Reservation {
         id: r.id,
         userId: r.userId,
         bookId: r.bookId,
-        bookTitle: r.Book?.title || r.bookTitle || "",
-        bookAuthor: r.Book?.author || r.bookAuthor || "",
+        bookTitle: r.book?.title || r.bookTitle || "",
+        bookAuthor: r.book?.author || r.bookAuthor || "",
         requestDate: new Date(r.requestAt || r.requestDate).toISOString(),
         returnDate: r.returnAt ? new Date(r.returnAt).toISOString() : null,
         status: r.status,
+        userName: r.user?.name || "",
     };
 }
 

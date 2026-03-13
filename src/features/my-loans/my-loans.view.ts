@@ -58,109 +58,124 @@ export function MyLoansView(): NixTemplate {
     }
 
     return html`
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            ${() => modalOpen.value
-                ? html`
-                    <div class="fixed inset-0 z-50 flex items-center justify-center" @keydown=${handleModalKeydown}>
-                        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click=${handleModalDismiss}></div>
-                        <div role="dialog" aria-modal="true" aria-labelledby="cancel-modal-title"
-                            class="relative bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-4 animate-fadeIn">
-                            <div class="flex items-center gap-3 mb-2">
-                                <span class="text-2xl">⚠️</span>
-                                <h2 id="cancel-modal-title" class="text-lg font-bold text-gray-900">Cancelar reserva</h2>
-                            </div>
-                            <p class="text-gray-600 mb-6">
-                                ¿Seguro que deseas cancelar la reserva de
-                                <strong>${() => modalBookTitle.value}</strong>?
-                            </p>
-                            <div class="flex gap-3 justify-end">
-                                <button
-                                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 active:scale-95 transition-all cursor-pointer"
-                                    @click=${handleModalDismiss}
-                                >No, volver</button>
-                                <button
-                                    class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 active:scale-95 transition-all cursor-pointer"
-                                    @click=${handleModalConfirm}
-                                >Sí, cancelar</button>
-                            </div>
-                        </div>
-                    </div>
-                `
-                : html`<span></span>`
-            }
-            <div class="mb-8 flex items-center justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Mis Préstamos</h1>
-                    <p class="mt-1 text-gray-500">Historial de reservas y préstamos</p>
-                </div>
-                <button
-                    class="px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
-                    @click=${handleRefresh}
-                >
-                    🔄 Actualizar
-                </button>
-            </div>
-
-            ${() => {
-                const uid = userId.value;
-                if (!uid) return html`<p class="text-gray-500">No autenticado</p>`;
-
-                return createQuery(
-                    `my-loans-${uid}`,
-                    () => reservationRepository.getByUser(uid),
-                    (reservations) => {
-                        if (reservations.length === 0) {
-                            return EmptyState({
-                                icon: "📋",
-                                message: "No tienes préstamos ni reservas aún",
-                                action: { label: "📚 Explorar Catálogo", onClick: handleNavigateHome },
-                            });
-                        }
-
-                        return html`
-                            <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                                <div class="overflow-x-auto">
-                                    <table class="w-full">
-                                        <thead>
-                                            <tr class="bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                                <th class="px-6 py-3">Libro</th>
-                                                <th class="px-6 py-3">Autor</th>
-                                                <th class="px-6 py-3">Fecha Solicitud</th>
-                                                <th class="px-6 py-3">Fecha Devolución</th>
-                                                <th class="px-6 py-3">Estado</th>
-                                                <th class="px-6 py-3">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="divide-y divide-gray-100">
-                                            ${reservations.map((r) => html`
-                                                <tr class="hover:bg-gray-50 transition-colors">
-                                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">${r.bookTitle}</td>
-                                                    <td class="px-6 py-4 text-sm text-gray-600">${r.bookAuthor}</td>
-                                                    <td class="px-6 py-4 text-sm text-gray-500">${formatDate(r.requestDate)}</td>
-                                                    <td class="px-6 py-4 text-sm text-gray-500">${r.returnDate ? formatDate(r.returnDate) : "—"}</td>
-                                                    <td class="px-6 py-4">${StatusBadge(r.status)}</td>
-                                                    <td class="px-6 py-4">
-                                                        ${r.status === "RESERVED"
-                                                            ? html`
-                                                                <button
-                                                                    class="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 rounded-lg hover:bg-red-100 active:scale-95 transition-all cursor-pointer"
-                                                                    @click=${() => handleCancelClick(r.id, r.bookTitle)}
-                                                                >✕ Cancelar</button>
-                                                            `
-                                                            : html`<span class="text-sm text-gray-300">—</span>`
-                                                        }
-                                                    </td>
-                                                </tr>
-                                            `)}
-                                        </tbody>
-                                    </table>
+        <div class="mt-20 relative min-h-screen bg-gray-50/20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+                ${() => modalOpen.value
+                    ? html`
+                        <div class="fixed inset-0 z-[100] flex items-center justify-center p-4" @keydown=${handleModalKeydown}>
+                            <div class="absolute inset-0 bg-indigo-900/40 backdrop-blur-sm" @click=${handleModalDismiss}></div>
+                            <div role="dialog" aria-modal="true" aria-labelledby="cancel-modal-title"
+                                class="relative glass-effect bg-white/90 rounded-3xl shadow-2xl p-8 w-full max-w-sm animate-fade-in-up border border-white/50">
+                                <div class="flex flex-col items-center text-center">
+                                    <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-3xl mb-4 border border-red-100">
+                                        ⚠️
+                                    </div>
+                                    <h2 id="cancel-modal-title" class="text-xl font-bold text-gray-900 mb-2">Cancelar reserva</h2>
+                                    <p class="text-gray-600 mb-8">
+                                        ¿Estás seguro de que quieres cancelar la reserva de
+                                        <strong class="text-gray-900 break-words">${() => modalBookTitle.value}</strong>?
+                                    </p>
+                                    <div class="flex flex-col sm:flex-row gap-3 w-full">
+                                        <button
+                                            class="flex-1 px-6 py-3 text-sm font-bold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-95 transition-all cursor-pointer"
+                                            @click=${handleModalDismiss}
+                                        >No, volver</button>
+                                        <button
+                                            class="flex-1 px-6 py-3 text-sm font-bold text-white bg-red-600 rounded-xl hover:bg-red-700 shadow-lg shadow-red-200 active:scale-95 transition-all cursor-pointer"
+                                            @click=${handleModalConfirm}
+                                        >Sí, cancelar</button>
+                                    </div>
                                 </div>
                             </div>
-                        `;
-                    },
-                    { fallback: Spinner() },
-                );
-            }}
+                        </div>
+                    `
+                    : html`<span></span>`
+                }
+
+                <div class="mb-12 animate-fade-in flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div>
+                        <h1 class="text-4xl font-black text-gray-900 tracking-tight">Mis Préstamos</h1>
+                        <p class="mt-2 text-lg text-gray-500 font-medium">Gestiona tus lecturas actuales y pasadas</p>
+                    </div>
+                    <button
+                        class="px-6 py-3 text-sm font-bold text-indigo-600 bg-white border border-indigo-100 rounded-2xl hover:bg-indigo-50 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm"
+                        @click=${handleRefresh}
+                    >
+                        🔄 Actualizar lista
+                    </button>
+                </div>
+
+                ${() => {
+                    const uid = userId.value;
+                    if (!uid) return html`<div class="py-20 text-center text-gray-500">No autenticado</div>`;
+
+                    return createQuery(
+                        `my-loans-${uid}`,
+                        () => reservationRepository.getByUser(uid),
+                        (reservations) => {
+                            if (reservations.length === 0) {
+                                return html`
+                                    <div class="animate-fade-in-up delay-200">
+                                        ${EmptyState({
+                                            icon: "📚",
+                                            message: "Aún no tienes préstamos. ¡Explora el catálogo y elige tu próxima lectura!",
+                                            action: { label: "📚 Explorar Catálogo", onClick: handleNavigateHome },
+                                        })}
+                                    </div>
+                                `;
+                            }
+
+                            return html`
+                                <div class="glass-effect rounded-3xl shadow-xl overflow-hidden border border-white/40">
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-left">
+                                            <thead>
+                                                <tr class="bg-indigo-50/50 text-xs font-black text-indigo-900 uppercase tracking-[0.1em]">
+                                                    <th class="px-8 py-5">Libro</th>
+                                                    <th class="px-8 py-5">Autor</th>
+                                                    <th class="px-8 py-5">Solicitud</th>
+                                                    <th class="px-8 py-5">Devolución</th>
+                                                    <th class="px-8 py-5">Estado</th>
+                                                    <th class="px-8 py-5 text-right">Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-100/50">
+                                                ${reservations.map((r) => html`
+                                                    <tr class="group hover:bg-white/40 transition-colors">
+                                                        <td class="px-8 py-5">
+                                                            <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">${r.bookTitle}</div>
+                                                        </td>
+                                                        <td class="px-8 py-5 text-sm text-gray-600 font-medium">${r.bookAuthor}</td>
+                                                        <td class="px-8 py-5 text-sm text-gray-500">${formatDate(r.requestDate)}</td>
+                                                        <td class="px-8 py-5 text-sm text-gray-500 font-medium">${r.returnDate ? formatDate(r.returnDate) : html`<span class="text-gray-300">—</span>`}</td>
+                                                        <td class="px-8 py-5">
+                                                            <div class="scale-90 origin-left">
+                                                                ${StatusBadge(r.status)}
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-8 py-5 text-right">
+                                                            ${r.status === "RESERVED"
+                                                                ? html`
+                                                                    <button
+                                                                        class="px-4 py-2 text-xs font-bold text-red-600 bg-red-50/50 rounded-xl hover:bg-red-500 hover:text-white active:scale-95 transition-all cursor-pointer border border-red-100"
+                                                                        @click=${() => handleCancelClick(r.id, r.bookTitle)}
+                                                                    >CANCELAR</button>
+                                                                `
+                                                                : html`<span class="text-sm text-gray-300">—</span>`
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                `)}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            `;
+                        },
+                        { fallback: html`<div class="py-40 flex justify-center">${Spinner()}</div>` },
+                    );
+                }}
+            </div>
         </div>
     `;
 }

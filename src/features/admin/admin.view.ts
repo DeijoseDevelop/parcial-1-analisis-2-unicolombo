@@ -13,32 +13,47 @@ export function AdminView(): NixTemplate {
     function handleTabLoans() { activeTab.value = "loans"; }
 
     return html`
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Panel de Administración</h1>
-                <p class="mt-1 text-gray-500">Gestiona libros, stock, préstamos y devoluciones</p>
-            </div>
+        <div class="mt-20 relative min-h-screen bg-gray-50/20 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="mb-12 animate-fade-in">
+                    <h1 class="text-4xl font-black text-gray-900 tracking-tight">Panel de Control</h1>
+                    <p class="mt-2 text-lg text-gray-500 font-medium whitespace-pre-line">Infraestructura de gestión bibliotecaria centralizada</p>
+                </div>
 
-            <div class="flex gap-2 mb-6 border-b border-gray-200">
-                <button
-                    class=${() => `px-5 py-2.5 text-sm font-semibold rounded-t-lg transition-all cursor-pointer -mb-px ${activeTab.value === "books" ? "bg-white border border-b-white border-gray-200 text-indigo-700" : "text-gray-500 hover:text-gray-700"}`}
-                    @click=${handleTabBooks}
-                >📚 Libros</button>
-                <button
-                    class=${() => `px-5 py-2.5 text-sm font-semibold rounded-t-lg transition-all cursor-pointer -mb-px ${activeTab.value === "loans" ? "bg-white border border-b-white border-gray-200 text-indigo-700" : "text-gray-500 hover:text-gray-700"}`}
-                    @click=${handleTabLoans}
-                >📋 Préstamos</button>
-            </div>
+                <div class="mb-10 flex p-1.5 bg-gray-100/80 rounded-2xl w-fit border border-gray-200/50 animate-fade-in delay-100">
+                    <button
+                        class=${() => `px-8 py-3 text-sm font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer ${activeTab.value === "books" ? "bg-white text-indigo-700 shadow-sm ring-1 ring-black/5" : "text-gray-500 hover:text-gray-900"}`}
+                        @click=${handleTabBooks}
+                    >📚 Inventario</button>
+                    <button
+                        class=${() => `px-8 py-3 text-sm font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer ${activeTab.value === "loans" ? "bg-white text-indigo-700 shadow-sm ring-1 ring-black/5" : "text-gray-500 hover:text-gray-900"}`}
+                        @click=${handleTabLoans}
+                    >📋 Operaciones</button>
+                </div>
 
-            ${() => activeTab.value === "books"
-            ? html`
-                    <div class="space-y-8">
-                        ${BookFormComponent(() => invalidateQueries("books"))}
-                        ${ManageBooksView()}
-                    </div>
-                `
-            : ManageReservationsView()
-        }
+                <div>
+                    ${() => activeTab.value === "books"
+                        ? html`
+                                <div class="grid grid-cols-1 gap-12">
+                                    <div class="glass-effect p-8 rounded-3xl border border-white/40 shadow-xl">
+                                        <h2 class="text-sm font-black uppercase tracking-widest text-gray-400 mb-8 border-b border-gray-100 pb-4">Registrar Nuevo Título</h2>
+                                        ${BookFormComponent(() => invalidateQueries("books"))}
+                                    </div>
+                                    <div class="glass-effect p-8 rounded-3xl border border-white/40 shadow-xl overflow-hidden">
+                                        <h2 class="text-sm font-black uppercase tracking-widest text-gray-400 mb-8 border-b border-gray-100 pb-4">Gestión de Catálogo</h2>
+                                        ${ManageBooksView()}
+                                    </div>
+                                </div>
+                            `
+                        : html`
+                            <div class="glass-effect p-8 rounded-3xl border border-white/40 shadow-xl overflow-hidden">
+                                <h2 class="text-sm font-black uppercase tracking-widest text-gray-400 mb-8 border-b border-gray-100 pb-4">Monitor de Préstamos y Reservas</h2>
+                                ${ManageReservationsView()}
+                            </div>
+                        `
+                    }
+                </div>
+            </div>
         </div>
     `;
 }

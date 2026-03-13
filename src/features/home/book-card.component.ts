@@ -8,29 +8,38 @@ export function BookCard(book: Book): NixTemplate {
 
     return html`
         <div
-            class="bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden flex flex-col group"
+            class="glass-effect rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col group border border-white/40 mb-2"
             @click=${() => router.navigate(`/book/${book.id}`)}
         >
-            <div class="h-48 bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center overflow-hidden relative">
+            <div class="h-56 bg-indigo-50 flex items-center justify-center overflow-hidden relative">
                 ${book.cover
-                    ? html`<img src=${book.cover} alt=${book.title} class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300" />`
-                    : html`<span class="text-6xl group-hover:scale-110 transition-transform duration-300">📖</span>`
+                    ? html`<img src=${book.cover} alt=${book.title} class="h-full w-full object-cover" />`
+                    : html`<span class="text-7xl">📖</span>`
                 }
-                <div class="absolute inset-0 bg-indigo-600/0 group-hover:bg-indigo-600/10 transition-colors duration-300 flex items-center justify-center">
-                    <span class="text-white text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-indigo-600/80 px-3 py-1.5 rounded-full backdrop-blur-sm">Ver detalle →</span>
+                <div class="absolute inset-0 bg-indigo-900/0 group-hover:bg-indigo-900/10 transition-colors duration-300 flex items-center justify-center">
+                    <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span class="text-white text-[10px] font-black tracking-widest uppercase bg-indigo-600 px-4 py-2 rounded-lg shadow-lg">DETALLES</span>
+                    </div>
+                </div>
+                
+                <div class="absolute top-3 right-3 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border bg-white/90 shadow-sm ${available ? "text-green-600 border-green-100" : "text-red-600 border-red-100"}">
+                    ${available ? "En Stock" : "Agotado"}
                 </div>
             </div>
-            <div class="p-4 flex flex-col flex-1">
-                <h3 class="font-bold text-gray-900 text-base line-clamp-2 group-hover:text-indigo-700 transition-colors">${book.title}</h3>
-                <p class="text-sm text-gray-500 mt-1">${book.author}</p>
-                <div class="mt-auto pt-3 flex items-center justify-between">
-                    <span class="text-xs text-gray-400">${book.publisher}</span>
-                    <span class=${`px-2.5 py-1 rounded-full text-xs font-semibold ${available
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}>
-                        ${available ? `${book.stock} disponible${book.stock > 1 ? "s" : ""}` : "Agotado"}
-                    </span>
+            
+            <div class="p-6 flex flex-col flex-1 bg-white">
+                <h3 class="font-bold text-gray-900 text-lg line-clamp-2 leading-tight">${book.title}</h3>
+                <p class="text-sm text-gray-500 mt-2 font-medium">${book.author}</p>
+                
+                <div class="mt-auto pt-4 flex items-center justify-between border-t border-gray-100">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] tracking-wider text-gray-400 font-bold uppercase">Editorial</span>
+                        <span class="text-xs text-gray-700 font-bold truncate max-w-[100px]">${book.publisher}</span>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <span class="text-[10px] tracking-wider text-gray-400 font-bold uppercase">Copias</span>
+                        <span class="text-xs font-black ${available ? "text-indigo-600" : "text-red-500"}">${book.stock}</span>
+                    </div>
                 </div>
             </div>
         </div>

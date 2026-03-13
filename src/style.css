@@ -1,37 +1,66 @@
 @import "tailwindcss";
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+/* Simplified animation without transform to avoid layout recalculation & flicker */
+@keyframes fadeInUp {
+    0% { 
+        opacity: 0; 
+        transform: translateY(4px); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0); 
     }
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(100%);
-    }
+/* Base Animations - Optimized for stability */
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out both;
+}
 
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+.animate-fade-in-up {
+    animation: fadeInUp 0.4s ease-out both;
+}
+
+/* Glassmorphism - Even more stable */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.98);
+    /* Removed backdrop-filter during problematic animations if necessary, 
+       but for now let's just make it more opaque to avoid complex blending */
+}
+
+/* Stable background for cards */
+.book-card-bg {
+    background: white;
+}
+
+.glass-effect-dark {
+    background: rgba(15, 23, 42, 0.95);
+}
+
+/* Login Background */
+.login-bg {
+    background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(30, 58, 138, 0.7)), url('/login-bg.png');
+    background-size: cover;
+    background-position: center;
 }
 
 /* Mobile Menu Transitions */
 .slide-enter-active,
 .slide-leave-active {
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.15s ease;
 }
 
 .slide-enter-from,
 .slide-leave-to {
     opacity: 0;
-    transform: translateY(-4%);
 }
+
+/* Simplified Delays */
+.delay-100 { animation-delay: 40ms; }
+.delay-200 { animation-delay: 80ms; }
+.delay-300 { animation-delay: 120ms; }

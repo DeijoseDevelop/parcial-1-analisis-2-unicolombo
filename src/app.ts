@@ -8,7 +8,7 @@ export class App extends NixComponent {
         return html`
             <div class="min-h-screen bg-gray-50 flex flex-col">
                 ${new Navbar()}
-                <main class="flex-1 mt-12">
+                <main class="flex-1 mt-20 md:mt-0">
                     ${new RouterView()}
                 </main>
                 ${new ToastContainer()}

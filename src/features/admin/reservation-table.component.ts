@@ -43,46 +43,56 @@ export function ReservationTable({ reservations, currentFilter }: ReservationTab
         const filterLabel = currentFilter !== "ALL"
             ? ` con estado "${STATUS_LABEL[currentFilter as ReservationStatus]}"`
             : "";
-        return EmptyState({ icon: "📋", message: `No hay registros${filterLabel}` });
+        return html`
+            <div class="py-12 animate-fade-in">
+                ${EmptyState({ icon: "📋", message: `No hay registros${filterLabel}` })}
+            </div>
+        `;
     }
 
     return html`
         <div class="overflow-x-auto">
-            <table class="w-full">
+            <table class="w-full text-left">
                 <thead>
-                    <tr class="bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                        <th class="px-6 py-3">ID</th>
-                        <th class="px-6 py-3">Libro</th>
-                        <th class="px-6 py-3">Autor</th>
-                        <th class="px-6 py-3">Usuario ID</th>
-                        <th class="px-6 py-3">Solicitud</th>
-                        <th class="px-6 py-3">Devolución</th>
-                        <th class="px-6 py-3">Estado</th>
-                        <th class="px-6 py-3">Acciones</th>
+                    <tr class="bg-indigo-50/30 text-xs font-black text-indigo-900 uppercase tracking-[0.1em]">
+                        <th class="px-8 py-5">Identificador</th>
+                        <th class="px-8 py-5">Título y Usuario</th>
+                        <th class="px-8 py-5">Solicitud</th>
+                        <th class="px-8 py-5">Devolución</th>
+                        <th class="px-8 py-5">Estado</th>
+                        <th class="px-8 py-5 text-right">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody class="divide-y divide-gray-100/50">
                     ${rows.map((r) => html`
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 text-sm text-gray-400">#${r.id}</td>
-                            <td class="px-6 py-4 text-sm font-medium text-gray-900">${r.bookTitle}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600">${r.bookAuthor}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">Usuario #${r.userId}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">${formatDate(r.requestDate)}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">${r.returnDate ? formatDate(r.returnDate) : "—"}</td>
-                            <td class="px-6 py-4">${StatusBadge(r.status)}</td>
-                            <td class="px-6 py-4">
+                        <tr class="group hover:bg-white/40 transition-colors">
+                            <td class="px-8 py-6 text-sm font-black text-gray-400 tracking-tighter">#${r.id}</td>
+                            <td class="px-8 py-6">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-black text-gray-900 group-hover:text-indigo-600 transition-colors">${r.bookTitle}</span>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <div class="w-4 h-4 rounded-full bg-gray-100 flex items-center justify-center text-[8px]">👤</div>
+                                        <span class="text-xs text-gray-500 font-bold uppercase tracking-wider">${r.userName || `ID #${r.userId}`}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-8 py-6 text-sm text-gray-500 font-medium">${formatDate(r.requestDate)}</td>
+                            <td class="px-8 py-6 text-sm text-gray-400 font-medium">${r.returnDate ? formatDate(r.returnDate) : "—"}</td>
+                            <td class="px-8 py-6">
+                                <div class="scale-90 origin-left">${StatusBadge(r.status)}</div>
+                            </td>
+                            <td class="px-8 py-6 text-right">
                                 ${r.status === "RESERVED"
                                     ? html`<button
-                                        class="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                                        class="px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-indigo-600 bg-white border border-indigo-100 rounded-xl hover:bg-indigo-600 hover:text-white hover:border-indigo-600 active:scale-95 transition-all shadow-sm cursor-pointer whitespace-nowrap"
                                         @click=${() => handleConfirmLoan(r)}
-                                    >✔ Confirmar préstamo</button>`
+                                    >Confirmar Préstamo</button>`
                                     : r.status === "BORROWED"
                                         ? html`<button
-                                            class="px-3 py-1.5 text-xs font-semibold text-green-600 bg-green-50 rounded-lg hover:bg-green-100 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                                            class="px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-green-600 bg-white border border-green-100 rounded-xl hover:bg-green-600 hover:text-white hover:border-green-600 active:scale-95 transition-all shadow-sm cursor-pointer whitespace-nowrap"
                                             @click=${() => handleReturnBook(r)}
-                                        >↩ Registrar devolución</button>`
-                                        : html`<span class="text-sm text-gray-300">—</span>`
+                                        >Registrar Devolución</button>`
+                                        : html`<span class="text-xs font-bold text-gray-300 tracking-widest">—</span>`
                                 }
                             </td>
                         </tr>

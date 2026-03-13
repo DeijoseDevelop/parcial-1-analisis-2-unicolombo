@@ -52,6 +52,15 @@ export function BookFormComponent(onCreated: () => void): NixTemplate {
                 cover: values.cover || undefined,
             });
             showToast("Libro creado exitosamente", "success");
+            
+            // Explicitly clear all fields
+            form.fields.title.value.value = "";
+            form.fields.author.value.value = "";
+            form.fields.publisher.value.value = "";
+            form.fields.stock.value.value = "";
+            form.fields.synopsis.value.value = "";
+            form.fields.cover.value.value = "";
+            
             form.reset();
             onCreated();
         } catch (err) {
@@ -61,93 +70,151 @@ export function BookFormComponent(onCreated: () => void): NixTemplate {
         }
     });
 
-    const INPUT_CLASS = "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-sm";
+    const LABEL_CLASS = "block text-xs font-black uppercase tracking-widest text-gray-500 mb-2";
+    const INPUT_CLASS = "w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-sm font-bold text-gray-900 placeholder:text-gray-400 shadow-sm";
 
     return html`
-        <div class="bg-white rounded-xl shadow-md p-6">
-            <h2 class="text-lg font-bold text-gray-900 mb-4">Agregar Nuevo Libro</h2>
-            <form @submit=${onSubmit} class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
-                        <input type="text" class=${INPUT_CLASS} placeholder="Título del libro"
-                            value=${() => form.fields.title.value.value}
-                            @input=${form.fields.title.onInput}
-                            @blur=${form.fields.title.onBlur}
-                        />
-                        ${() => {
-            const err = form.fields.title.error.value;
-            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
-        }}
+        <div class="w-full">
+            <form @submit=${onSubmit} class="space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Basic Info Column -->
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="col-span-full">
+                                <label class=${LABEL_CLASS}>Título del Obra *</label>
+                                <input type="text" class=${INPUT_CLASS} placeholder="E.g. Cien Años de Soledad"
+                                    value=${() => form.fields.title.value.value}
+                                    @input=${form.fields.title.onInput}
+                                    @blur=${form.fields.title.onBlur}
+                                />
+                                ${() => {
+                                    const err = form.fields.title.error.value;
+                                    return err ? html`<p class="mt-1.5 text-[10px] font-bold text-red-500 uppercase tracking-wider animate-pulse">${err}</p>` : html`<span></span>`;
+                                }}
+                            </div>
+                            
+                            <div class="col-span-1">
+                                <label class=${LABEL_CLASS}>Autor / Escritor *</label>
+                                <input type="text" class=${INPUT_CLASS} placeholder="Nombre completo"
+                                    value=${() => form.fields.author.value.value}
+                                    @input=${form.fields.author.onInput}
+                                    @blur=${form.fields.author.onBlur}
+                                />
+                                ${() => {
+                                    const err = form.fields.author.error.value;
+                                    return err ? html`<p class="mt-1.5 text-[10px] font-bold text-red-500 uppercase tracking-wider animate-pulse">${err}</p>` : html`<span></span>`;
+                                }}
+                            </div>
+
+                            <div class="col-span-1">
+                                <label class=${LABEL_CLASS}>Editorial *</label>
+                                <input type="text" class=${INPUT_CLASS} placeholder="Casa editorial"
+                                    value=${() => form.fields.publisher.value.value}
+                                    @input=${form.fields.publisher.onInput}
+                                    @blur=${form.fields.publisher.onBlur}
+                                />
+                                ${() => {
+                                    const err = form.fields.publisher.error.value;
+                                    return err ? html`<p class="mt-1.5 text-[10px] font-bold text-red-500 uppercase tracking-wider animate-pulse">${err}</p>` : html`<span></span>`;
+                                }}
+                            </div>
+
+                            <div class="col-span-full">
+                                <label class=${LABEL_CLASS}>Existencias Iniciales *</label>
+                                <div class="relative max-w-xs">
+                                    <input type="number" class=${INPUT_CLASS} placeholder="0" min="0"
+                                        value=${() => form.fields.stock.value.value}
+                                        @input=${form.fields.stock.onInput}
+                                        @blur=${form.fields.stock.onBlur}
+                                    />
+                                    <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                                        <span class="text-xs font-bold text-gray-300">UNIDADES</span>
+                                    </div>
+                                </div>
+                                ${() => {
+                                    const err = form.fields.stock.error.value;
+                                    return err ? html`<p class="mt-1.5 text-[10px] font-bold text-red-500 uppercase tracking-wider animate-pulse">${err}</p>` : html`<span></span>`;
+                                }}
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Autor</label>
-                        <input type="text" class=${INPUT_CLASS} placeholder="Nombre del autor"
-                            value=${() => form.fields.author.value.value}
-                            @input=${form.fields.author.onInput}
-                            @blur=${form.fields.author.onBlur}
-                        />
-                        ${() => {
-            const err = form.fields.author.error.value;
-            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
-        }}
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Editorial</label>
-                        <input type="text" class=${INPUT_CLASS} placeholder="Casa editorial"
-                            value=${() => form.fields.publisher.value.value}
-                            @input=${form.fields.publisher.onInput}
-                            @blur=${form.fields.publisher.onBlur}
-                        />
-                        ${() => {
-            const err = form.fields.publisher.error.value;
-            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
-        }}
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
-                        <input type="number" class=${INPUT_CLASS} placeholder="Cantidad" min="0"
-                            value=${() => form.fields.stock.value.value}
-                            @input=${form.fields.stock.onInput}
-                            @blur=${form.fields.stock.onBlur}
-                        />
-                        ${() => {
-            const err = form.fields.stock.error.value;
-            return err ? html`<p class="mt-1 text-xs text-red-500">${err}</p>` : html`<span></span>`;
-        }}
+
+                    <!-- Media & Synopsis Column -->
+                    <div class="space-y-6">
+                        <div>
+                            <label class=${LABEL_CLASS}>Sinopsis de la Obra</label>
+                            <textarea class=${`${INPUT_CLASS} h-32 resize-none`} placeholder="Describe brevemente la trama o contenido..."
+                                value=${() => form.fields.synopsis.value.value}
+                                @input=${form.fields.synopsis.onInput}
+                            ></textarea>
+                        </div>
+
+                        <div>
+                            <label class=${LABEL_CLASS}>Imagen de Portada</label>
+                            <div class="relative group">
+                                <input 
+                                    type="file" 
+                                    accept="image/*" 
+                                    class="hidden" 
+                                    id="book-cover-upload"
+                                    @change=${async (e: Event) => {
+                                        const f = (e.target as HTMLInputElement).files?.[0];
+                                        if (!f) return;
+                                        try {
+                                            const b = await fileToBase64(f);
+                                            form.fields.cover.value.value = b;
+                                        } catch (_err) {
+                                            showToast("Error al procesar imagen", "error");
+                                        }
+                                    }} 
+                                />
+                                
+                                <div class="flex gap-4 items-start">
+                                    <label 
+                                        for="book-cover-upload" 
+                                        class="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-2xl p-8 hover:border-indigo-400 hover:bg-indigo-50/30 transition-all cursor-pointer group-hover:shadow-inner"
+                                    >
+                                        <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-2xl mb-3 shadow-sm group-hover:scale-110 transition-transform">
+                                            🖼️
+                                        </div>
+                                        <p class="text-xs font-black text-indigo-600 uppercase tracking-widest">Subir Imagen</p>
+                                        <p class="text-[10px] text-gray-400 font-bold mt-1 uppercase tracking-wider">PNG, JPG hasta 5MB</p>
+                                    </label>
+
+                                    ${() => {
+                                        const b = form.fields.cover.value.value;
+                                        return b ? html`
+                                            <div class="relative w-28 h-40 shrink-0 group/preview animate-fade-in">
+                                                <img src=${b} class="w-full h-full object-cover rounded-xl shadow-lg border-2 border-white" />
+                                                <button 
+                                                    type="button"
+                                                    class="absolute -top-2 -right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center text-xs shadow-lg hover:bg-red-600 hover:scale-110 transition-all cursor-pointer"
+                                                    @click=${() => form.fields.cover.value.value = ""}
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                        ` : html`
+                                            <div class="w-28 h-40 shrink-0 border-2 border-dashed border-gray-100 rounded-xl flex items-center justify-center bg-gray-50/50">
+                                                <span class="text-[10px] font-black text-gray-300 uppercase tracking-widest text-center px-4">Vista previa</span>
+                                            </div>
+                                        `;
+                                    }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Sinopsis (opcional)</label>
-                    <textarea class=${`${INPUT_CLASS} h-20 resize-none`} placeholder="Breve descripción del libro..."
-                        @input=${form.fields.synopsis.onInput}
-                    ></textarea>
+
+                <div class="flex justify-start pt-6 border-t border-gray-100/50">
+                    <button
+                        type="submit"
+                        class="px-10 py-4 bg-indigo-600 text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-indigo-700 shadow-xl shadow-indigo-100 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-3"
+                        disabled=${() => loading.value}
+                    >
+                        ${() => (loading.value ? html`<span>⏳ PROCESANDO...</span>` : html`<span>➕ CREAR NUEVO LIBRO</span>`)}
+                    </button>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Portada (opcional)</label>
-                    <input type="file" accept="image/*" class="block" @change=${async (e: Event) => {
-            const f = (e.target as HTMLInputElement).files?.[0];
-            if (!f) return;
-            try {
-                const b = await fileToBase64(f);
-                // set raw value on the form field
-                (form.fields as any).cover.value.value = b;
-            } catch (_err) {
-                showToast("No se pudo leer la imagen", "error");
-            }
-        }} />
-                    ${() => {
-            const b = (form.fields as any).cover.value.value;
-            return b ? html`<img src=${b} class="mt-2 w-28 h-36 object-cover rounded" />` : html`<span></span>`;
-        }}
-                </div>
-                <button
-                    type="submit"
-                    class="px-5 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 hover:shadow-lg active:scale-95 focus:ring-4 focus:ring-indigo-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm cursor-pointer"
-                    disabled=${() => loading.value}
-                >
-                    ${() => (loading.value ? "⏳ Creando..." : "➕ Crear Libro")}
-                </button>
             </form>
         </div>
     `;

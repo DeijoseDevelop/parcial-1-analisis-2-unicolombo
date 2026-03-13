@@ -37,4 +37,5 @@ export interface Reservation {
     requestDate: string;
     returnDate: string | null;
     status: ReservationStatus;
+    userName?: string;
 }

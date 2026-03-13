@@ -18,44 +18,55 @@ export function HomeView(): NixTemplate {
     }
 
     return html`
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Catálogo de Libros</h1>
-                <p class="mt-1 text-gray-500">Explora y reserva libros de nuestra biblioteca</p>
-            </div>
-
-            <div class="mb-6">
-                <div class="relative max-w-lg">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                        🔍
-                    </span>
-                    <input
-                        type="text"
-                        class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow"
-                        placeholder="Buscar por título o autor..."
-                        @input=${handleSearchInput}
-                    />
+        <div class="mt-20 relative min-h-screen bg-gray-50/30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
+                <!-- Header Section -->
+                <div class="mb-10 animate-fade-in">
+                    <h1 class="text-4xl font-black text-gray-900 tracking-tight">Catálogo de Libros</h1>
+                    <p class="mt-2 text-lg text-gray-500 font-medium">Descubre tu próxima gran aventura literaria</p>
                 </div>
-            </div>
 
-            ${createQuery(
-                "books",
-                () => bookRepository.getAll(search.peek() || undefined),
-                (books) => {
-                    if (books.length === 0) {
-                        return EmptyState({ icon: "📭", message: "No se encontraron libros" });
-                    }
-                    return html`
-                        <p class="mb-4 text-sm text-gray-500">
-                            ${books.length} libro${books.length !== 1 ? "s" : ""} encontrado${books.length !== 1 ? "s" : ""}${search.peek() ? html` — "<strong>${search.peek()}</strong>"` : ""}
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            ${books.map((book) => BookCard(book))}
-                        </div>
-                    `;
-                },
-                { fallback: Spinner() },
-            )}
+                <!-- Search & Filters -->
+                <div class="glass-effect rounded-2xl p-6 mb-10 shadow-sm border border-white/40 animate-fade-in-up">
+                    <div class="relative max-w-xl">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
+                            🔍
+                        </span>
+                        <input
+                            type="text"
+                            class="w-full pl-11 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all placeholder:text-gray-400 shadow-sm font-medium"
+                            placeholder="Buscar por título, autor o editorial..."
+                            @input=${handleSearchInput}
+                        />
+                    </div>
+                </div>
+
+                ${createQuery(
+                    "books",
+                    () => bookRepository.getAll(search.peek() || undefined),
+                    (books) => {
+                        if (books.length === 0) {
+                            return html`
+                                <div class="animate-fade-in-up delay-200">
+                                    ${EmptyState({ icon: "📭", message: "No se encontraron libros que coincidan con tu búsqueda." })}
+                                </div>
+                            `;
+                        }
+                        return html`
+                            <div class="flex items-center justify-between mb-6">
+                                <p class="text-sm font-bold text-gray-500 uppercase tracking-wider">
+                                    ${books.length} libro${books.length !== 1 ? "s" : ""} encontrado${books.length !== 1 ? "s" : ""}
+                                    ${search.peek() ? html` para <span class="text-indigo-600">"${search.peek()}"</span>` : ""}
+                                </p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                                ${books.map((book) => BookCard(book))}
+                            </div>
+                        `;
+                    },
+                    { fallback: html`<div class="py-20 flex justify-center">${Spinner()}</div>` },
+                )}
+            </div>
         </div>
     `;
 }

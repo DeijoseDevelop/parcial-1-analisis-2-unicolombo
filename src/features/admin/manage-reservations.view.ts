@@ -22,24 +22,25 @@ export function ManageReservationsView(): NixTemplate {
         (all) => html`
             ${() => ReservationTable({ reservations: all, currentFilter: filter.value })}
         `,
-        { fallback: Spinner({ size: "w-6 h-6", padding: "py-8" }) },
+        { fallback: html`<div class="py-20 flex justify-center">${Spinner()}</div>` },
     );
 
     return html`
-        <div class="bg-white rounded-xl shadow-md overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between gap-4 flex-wrap">
-                <h2 class="text-lg font-bold text-gray-900">Gestión de Préstamos</h2>
-                <div class="flex gap-1.5">
+        <div class="w-full">
+            <div class="mb-8 flex items-center justify-between gap-6 flex-wrap">
+                <div class="flex flex-wrap gap-2 bg-gray-100/50 p-1.5 rounded-2xl border border-gray-100/50">
                     ${FILTER_OPTIONS.map((opt) => html`
                         <button
-                            class=${() => `px-3 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${filter.value === opt.value ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                            class=${() => `px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer ${filter.value === opt.value ? "bg-white text-indigo-700 shadow-sm ring-1 ring-black/5" : "text-gray-500 hover:text-gray-800"}`}
                             @click=${() => { filter.value = opt.value; }}
                         >${opt.label}</button>
                     `)}
                 </div>
             </div>
 
-            ${renderReservationsQuery()}
+            <div>
+                ${renderReservationsQuery()}
+            </div>
         </div>
     `;
 }
