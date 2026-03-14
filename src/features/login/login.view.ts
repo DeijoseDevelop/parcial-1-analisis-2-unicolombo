@@ -121,7 +121,7 @@ export function LoginView(): NixTemplate {
 
                         <button
                             type="submit"
-                            class="relative w-full py-4 px-6 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 hover:shadow-xl hover:-translate-y-0.5 active:scale-95 focus:ring-4 focus:ring-indigo-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group/btn"
+                            class="cursor-pointer relative w-full py-4 px-6 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 hover:shadow-xl hover:-translate-y-0.5 active:scale-95 focus:ring-4 focus:ring-indigo-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group/btn"
                             disabled=${() => loading.value}
                         >
                             <span class="relative z-10 flex items-center justify-center gap-2">
