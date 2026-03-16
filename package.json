@@ -18,7 +18,7 @@
     "vite": "^8.0.0-beta.13"
   },
   "dependencies": {
-    "@deijose/nix-js": "1.7.3",
+    "@deijose/nix-js": "1.7.5",
     "axios": "^1.13.6"
   }
 }
