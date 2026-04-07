@@ -10,7 +10,7 @@ let reservations = [...MOCK_RESERVATIONS];
 export const reservationRepository: ReservationRepository = {
     async getAll(): Promise<Reservation[]> {
         await delay(300);
-        return reservations;
+        return [...reservations];
     },
 
     async getByUser(userId: number): Promise<Reservation[]> {
@@ -57,8 +57,8 @@ export const reservationRepository: ReservationRepository = {
         await delay(300);
         const index = reservations.findIndex(r => r.id === reservationId);
         if (index !== -1) {
-            reservations[index] = { 
-                ...reservations[index], 
+            reservations[index] = {
+                ...reservations[index],
                 status: "RETURNED",
                 returnDate: new Date().toISOString()
             };

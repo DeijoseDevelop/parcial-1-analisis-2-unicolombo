@@ -10,13 +10,14 @@ let books = [...MOCK_BOOKS];
 
 export const bookRepository: BookRepository = {
     async getAll(search?: string): Promise<Book[]> {
-        await delay(300);
-        if (!search) return books;
+        // await delay(300);
+        if (!search) return [...books];  // nueva referencia siempre
         const query = search.toLowerCase();
         return books.filter(
-            b => b.title.toLowerCase().includes(query) || 
-                 b.author.toLowerCase().includes(query)
+            b => b.title.toLowerCase().includes(query) ||
+                b.author.toLowerCase().includes(query)
         );
+        // filter ya devuelve array nuevo, este está bien
     },
 
     async getById(id: number): Promise<Book | null> {
@@ -35,7 +36,7 @@ export const bookRepository: BookRepository = {
     },
 
     async update(id: number, data: Partial<Book>): Promise<Book> {
-        await delay(400);
+        // await delay(400);
         const index = books.findIndex(b => b.id === id);
         if (index === -1) throw new Error("Libro no encontrado");
         books[index] = { ...books[index], ...data };

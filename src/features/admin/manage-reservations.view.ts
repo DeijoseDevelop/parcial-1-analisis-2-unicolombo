@@ -16,14 +16,7 @@ const FILTER_OPTIONS: { value: ReservationStatus | "ALL"; label: string }[] = [
 export function ManageReservationsView(): NixTemplate {
     const filter = signal<ReservationStatus | "ALL">("ALL");
 
-    const renderReservationsQuery = () => createQuery(
-        "reservations",
-        () => reservationRepository.getAll(),
-        (all) => html`
-            ${() => ReservationTable({ reservations: all, currentFilter: filter.value })}
-        `,
-        { fallback: html`<div class="py-20 flex justify-center">${Spinner()}</div>` },
-    );
+    const q = createQuery("reservations", () => reservationRepository.getAll());
 
     return html`
         <div class="w-full">
@@ -31,7 +24,10 @@ export function ManageReservationsView(): NixTemplate {
                 <div class="flex flex-wrap gap-2 bg-gray-100/50 p-1.5 rounded-2xl border border-gray-100/50">
                     ${FILTER_OPTIONS.map((opt) => html`
                         <button
-                            class=${() => `px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer ${filter.value === opt.value ? "bg-white text-indigo-700 shadow-sm ring-1 ring-black/5" : "text-gray-500 hover:text-gray-800"}`}
+                            class=${() => `px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all cursor-pointer ${filter.value === opt.value
+                ? "bg-white text-indigo-700 shadow-sm ring-1 ring-black/5"
+                : "text-gray-500 hover:text-gray-800"
+            }`}
                             @click=${() => { filter.value = opt.value; }}
                         >${opt.label}</button>
                     `)}
@@ -39,7 +35,15 @@ export function ManageReservationsView(): NixTemplate {
             </div>
 
             <div>
-                ${renderReservationsQuery()}
+                ${() => {
+            if (q.status.value === "pending") {
+                return html`<div class="py-20 flex justify-center">${Spinner()}</div>`;
+            }
+            if (q.status.value === "error") {
+                return html`<p class="text-red-500 text-sm font-bold">Error al cargar las reservas.</p>`;
+            }
+            return ReservationTable({ reservations: q.data.value!, currentFilter: filter.value });
+        }}
             </div>
         </div>
     `;

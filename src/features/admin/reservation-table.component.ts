@@ -77,12 +77,12 @@ export function ReservationTable({ reservations, currentFilter }: ReservationTab
                                 </div>
                             </td>
                             <td class="px-8 py-6 text-sm text-gray-500 font-medium">${formatDate(r.requestDate)}</td>
-                            <td class="px-8 py-6 text-sm text-gray-400 font-medium">${r.returnDate ? formatDate(r.returnDate) : "—"}</td>
+                            <td class="px-8 py-6 text-sm text-gray-400 font-medium">${() => r.returnDate ? formatDate(r.returnDate) : "—"}</td>
                             <td class="px-8 py-6">
-                                <div class="scale-90 origin-left">${StatusBadge(r.status)}</div>
+                                <div class="scale-90 origin-left">${() => StatusBadge(r.status)}</div>
                             </td>
                             <td class="px-8 py-6 text-right">
-                                ${r.status === "RESERVED"
+                                ${() => r.status === "RESERVED"
                                     ? html`<button
                                         class="px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-indigo-600 bg-white border border-indigo-100 rounded-xl hover:bg-indigo-600 hover:text-white hover:border-indigo-600 active:scale-95 transition-all shadow-sm cursor-pointer whitespace-nowrap"
                                         @click=${() => handleConfirmLoan(r)}
